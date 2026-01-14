@@ -1,0 +1,64 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Ambientes Virtuais ---
+# Pasta padrão do venv, virtualenv, etc.
+.venv/
+venv/
+ENV/
+env/
+pythonenv*/
+
+# --- Variáveis de Ambiente (MUITO IMPORTANTE) ---
+# Nunca suba suas chaves de API e senhas de banco de dados
+.env
+.flaskenv
+*.env
+
+# --- IDEs e Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# --- Testes e Cobertura ---
+htmlcov/
+.tox/
+.nosetests/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# --- Logs e Banco de Dados ---
+*.log
+*.sqlite
+*.sqlite3
+
+# --- Docker (Opcional) ---
+# Ignore se você gera dados persistentes localmente
+# pgdata/
