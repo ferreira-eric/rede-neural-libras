@@ -1,40 +1,38 @@
 import cv2
 import base64
 import numpy as np
+import mediapipe as mp
+import os
 from fastapi import FastAPI, WebSocket
 import uvicorn
+from keras.models import load_model
 
 app = FastAPI()
 
-# Aqui você carregaria suas Redes Neurais
-# rede1 = HandDetector()
-# rede2 = LibrasClassifier()
+mp_hands = mp.solutions.hands
+hands = mp_hands.Hands(
+    static_image_mode=False,
+    max_num_hands=1,
+    min_detection_confidence=0.5
+)
 
-@app.websocket("/ws")
-async def libras_websocket(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            print("Nova conexão WebSocket")
-            # 1. Recebe o dado do React
-            data = await websocket.receive_json()
-            image_b64 = data.get("image")
-            
-            if image_b64:
-                # 2. Converte Base64 para imagem OpenCV
-                format, imgstr = image_b64.split(';base64,') 
-                nparr = np.frombuffer(base64.b64decode(imgstr), np.uint8)
-                frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+model_mlp = None
+model_cnn = None
+classes = ["A", "B", "C"]
 
-                # 3. Processamento (Suas duas redes entram aqui)
-                # mao_recortada = rede1.detect(frame)
-                # resultado = rede2.classify(mao_recortada)
-                resultado = "A" # Simulação de predição
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 
-                # 4. Envia a resposta de volta
-                await websocket.send_json({"letter": resultado})
-    except Exception as e:
-        print(f"Conexão encerrada: {e}")
+if os.path.exists("classes.npy"):
+    classes = np.load("classes.npy", allow_pickle=True)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+try:
+    model_mlp = load_model("modelo_mlp.keras")
+    print("MLP carregada")
+except:
+    print("Erro ao carregar MLP")
+
+try:
+    model_cnn = load_model("modelo_cnn1d.keras")
+    print("CNN carregada")
+except:
+    print("Erro ao carregar CNN")
